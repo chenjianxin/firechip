@@ -66,3 +66,5 @@ class LoopbackNICConfig extends Config(
 
 class SimNetworkConfig extends Config(
   new WithSimNetwork ++ new BaseExampleConfig)
+
+class WithSmallBooms extends boom.WithSmallBooms
