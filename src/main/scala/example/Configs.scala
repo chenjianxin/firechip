@@ -64,6 +64,18 @@ class WithSimNetwork extends Config((site, here, up) => {
   }
 })
 
+class WithFixedInputStream extends Config((site, here, up) => {
+  case BuildTop => (clock: Clock, reset: Bool, p: Parameters) => {
+    val top = Module(LazyModule(new ExampleTopWithInputStream()(p)).module)
+    top.connectFixedInput(Seq(
+      BigInt("1002abcd", 16),
+      BigInt("34510204", 16),
+      BigInt("10329999", 16),
+      BigInt("92101222", 16)))
+    top
+  }
+})
+
 class BaseExampleConfig extends Config(
   new WithBootROM ++
   new freechips.rocketchip.system.DefaultConfig)
@@ -87,6 +99,9 @@ class LoopbackNICConfig extends Config(
 
 class SimNetworkConfig extends Config(
   new WithSimNetwork ++ new BaseExampleConfig)
+
+class FixedInputStreamConfig extends Config(
+  new WithFixedInputStream ++ new BaseExampleConfig)
 
 class WithTwoTrackers extends WithNBlockDeviceTrackers(2)
 class WithFourTrackers extends WithNBlockDeviceTrackers(4)
