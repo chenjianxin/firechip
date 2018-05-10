@@ -1,6 +1,7 @@
 package example
 
 import chisel3._
+import chisel3.core.IntParam
 import chisel3.util._
 import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.interrupts.{IntSourceNode, IntSourcePortSimple}
@@ -114,6 +115,13 @@ trait HasPeripheryInputStreamModuleImp extends LazyModuleImp {
     val fixed = Module(new FixedInputStream(data, outer.streamWidth))
     stream_in <> fixed.io.out
   }
+
+  def connectSimInput(clock: Clock, reset: Bool) {
+    val sim = Module(new SimInputStream(outer.streamWidth))
+    sim.io.clock := clock
+    sim.io.reset := reset
+    stream_in <> sim.io.out
+  }
 }
 
 class FixedInputStream(data: Seq[BigInt], w: Int) extends Module {
@@ -135,4 +143,12 @@ class FixedInputStream(data: Seq[BigInt], w: Int) extends Module {
 
   io.out.valid := state === s_feed
   io.out.bits  := dataROM(idx)
+}
+
+class SimInputStream(w: Int) extends BlackBox(Map("DATA_BITS" -> IntParam(w))) {
+  val io = IO(new Bundle {
+    val clock = Input(Clock())
+    val reset = Input(Bool())
+    val out = Decoupled(UInt(w.W))
+  })
 }

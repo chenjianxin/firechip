@@ -76,6 +76,14 @@ class WithFixedInputStream extends Config((site, here, up) => {
   }
 })
 
+class WithSimInputStream extends Config((site, here, up) => {
+  case BuildTop => (clock: Clock, reset: Bool, p: Parameters) => {
+    val top = Module(LazyModule(new ExampleTopWithInputStream()(p)).module)
+    top.connectSimInput(clock, reset)
+    top
+  }
+})
+
 class BaseExampleConfig extends Config(
   new WithBootROM ++
   new freechips.rocketchip.system.DefaultConfig)
@@ -102,6 +110,9 @@ class SimNetworkConfig extends Config(
 
 class FixedInputStreamConfig extends Config(
   new WithFixedInputStream ++ new BaseExampleConfig)
+
+class SimInputStreamConfig extends Config(
+  new WithSimInputStream ++ new BaseExampleConfig)
 
 class WithTwoTrackers extends WithNBlockDeviceTrackers(2)
 class WithFourTrackers extends WithNBlockDeviceTrackers(4)

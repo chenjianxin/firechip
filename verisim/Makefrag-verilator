@@ -34,4 +34,5 @@ VERILATOR_FLAGS := --top-module $(MODEL) \
   -I$(base_dir)/icenet/vsrc \
   -I$(base_dir)/testchipip/vsrc \
   -I$(base_dir)/rocket-chip/vsrc \
+  -I$(base_dir)/src/main/resources/vsrc \
   -O3 -CFLAGS "$(CXXFLAGS) -DVERILATOR -include $(base_dir)/rocket-chip/csrc/verilator.h"
