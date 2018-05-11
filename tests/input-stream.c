@@ -21,7 +21,6 @@ int main(void)
 	reg_write64(INPUTSTREAM_RUNNING, 1);
 
 	while (reg_read64(INPUTSTREAM_COMPLETE) == 0) {}
-	asm volatile ("fence");
 	reg_write64(INPUTSTREAM_COMPLETE, 0);
 
 	for (int i = 0; i < N; i++)
