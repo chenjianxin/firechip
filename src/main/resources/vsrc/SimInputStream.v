@@ -1,6 +1,7 @@
 import "DPI-C" function void input_stream_init
 (
-    input string filename
+    input string filename,
+    input int    data_bits
 );
 
 import "DPI-C" function void input_stream_tick
@@ -21,13 +22,15 @@ module SimInputStream #(DATA_BITS=64) (
     bit __out_valid;
     longint __out_bits;
     string filename;
+    int data_bits;
 
     reg                 __out_valid_reg;
     reg [DATA_BITS-1:0] __out_bits_reg;
 
     initial begin
+        data_bits = DATA_BITS;
         if ($value$plusargs("instream=%s", filename)) begin
-            input_stream_init(filename);
+            input_stream_init(filename, data_bits);
         end
     end
 
